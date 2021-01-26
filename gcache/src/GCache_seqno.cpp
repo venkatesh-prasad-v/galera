@@ -146,10 +146,9 @@ namespace gcache
             batch_size += (new_gap >= old_gap) * min_batch_size;
             old_gap = new_gap;
 
-            seqno_t const start  (idx - 1);
-            seqno_t const max_end(std::min(seqno, seqno_locked - 1));
-            seqno_t const end    (max_end - start >= 2*batch_size ?
-                                  start + batch_size : max_end);
+            seqno_t const start(idx - 1);
+            seqno_t const end  (seqno - start >= 2*batch_size ?
+                                start + batch_size : seqno);
 #ifndef NDEBUG
             if (params.debug())
             {
@@ -168,7 +167,6 @@ namespace gcache
                       seqno_released == SEQNO_NONE))
                 {
                     log_info << "seqno_released: " << seqno_released
-                             << "; seqno_locked: " << seqno_locked
                              << "; idx: " << idx
                              << "; seqno2ptr.begin: " <<seqno2ptr.index_begin()
                              << "\nstart: " << start << "; end: " << end
